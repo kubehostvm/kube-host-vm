@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vm1
+  labels:
+    kube-host-vm/name: vm1
+spec:
+  hostNetwork: true
+  containers:
+    - name: qemu
+      image: icoy/kube-host-vm:v0.0.1
+      resources:
+        limits:
+          cpu: "2"
+          memory: "2048Mi"
+      securityContext:
+        allowPrivilegeEscalation: true
+        privileged: true
+      command: ["qemu-system-x86_64"]
+      args:
+        - "-name"
+        - "vm1"
+        - "-m"
+        - "2048"
+        - "-smp"
+        - "2"
+        - "-boot"
+        - "menu=on"
+        - "-drive"
+        - "file=/etc/kube-host-vm/debian.qcow2,format=qcow2,if=virtio"
+        - "-drive"
+        - "file=/etc/kube-host-vm/cloud-cfg.img,format=raw,if=virtio,media=cdrom"
+        - "-nographic"
+        - "-vnc"
+        - ":0"
+        - "-netdev"
+        - "user,id=tap0"
+        - "-device"
+        - "virtio-net-pci,netdev=tap0"
+      volumeMounts:
+        - name: cache
+          mountPath: /etc/kube-host-vm
+  volumes:
+    - name: cache
+      hostPath:
+        path: /etc/kube-host-vm
+        type: Directory
