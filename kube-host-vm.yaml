@@ -6,37 +6,78 @@ metadata:
     kube-host-vm/name: vm1
 spec:
   hostNetwork: true
+  initContainers:
+  - name: init
+    image: docker.io/kubeovn/kube-ovn:v1.14.0
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      allowPrivilegeEscalation: true
+      privileged: true
+    command:
+    - sh
+    - -ecx
+    - /etc/kube-host-vm/plug-ovs.sh
+    env:
+    - name: CPU
+      value: "2"
+    - name: LSP
+      value: "vm01.default"
+    - name: IP
+      value: "10.16.0.77"
+    - name: MAC_ADDR
+      value: "02:94:b0:9e:52:29"
+    - name: POD_UID
+      valueFrom:
+        fieldRef: 
+          fieldPath: metadata.uid
+    - name: POD_NAME
+      valueFrom:
+        fieldRef: 
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef: 
+          fieldPath: metadata.namespace
+    volumeMounts:
+      - name: cache
+        mountPath: /etc/kube-host-vm
+      - name: host-run-ovs
+        mountPath: /run/openvswitch
   containers:
     - name: qemu
       image: icoy/kube-host-vm:v0.0.1
+      securityContext:
+        allowPrivilegeEscalation: true
+        privileged: true
       resources:
         limits:
           cpu: "2"
           memory: "2048Mi"
-      securityContext:
-        allowPrivilegeEscalation: true
-        privileged: true
-      command: ["qemu-system-x86_64"]
-      args:
-        - "-name"
-        - "vm1"
-        - "-m"
-        - "2048"
-        - "-smp"
-        - "2"
-        - "-boot"
-        - "menu=on"
-        - "-drive"
-        - "file=/etc/kube-host-vm/debian.qcow2,format=qcow2,if=virtio"
-        - "-drive"
-        - "file=/etc/kube-host-vm/cloud-cfg.img,format=raw,if=virtio,media=cdrom"
-        - "-nographic"
-        - "-vnc"
-        - ":0"
-        - "-netdev"
-        - "user,id=tap0"
-        - "-device"
-        - "virtio-net-pci,netdev=tap0"
+      command:
+      - sh
+      - -ecx
+      - /etc/kube-host-vm/boot-vm.sh
+      env:
+      - name: CPU
+        value: "2"
+      - name: LSP
+        value: "vm01.default"
+      - name: IP
+        value: "10.16.0.77"
+      - name: MAC_ADDR
+        value: "02:94:b0:9e:52:29"
+      - name: POD_UID
+        valueFrom:
+          fieldRef: 
+            fieldPath: metadata.uid
+      - name: POD_NAME
+        valueFrom:
+          fieldRef: 
+            fieldPath: metadata.name
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef: 
+            fieldPath: metadata.namespace
       volumeMounts:
         - name: cache
           mountPath: /etc/kube-host-vm
@@ -45,3 +86,7 @@ spec:
       hostPath:
         path: /etc/kube-host-vm
         type: Directory
+    - hostPath:
+        path: /run/openvswitch
+        type: ""
+      name: host-run-ovs
