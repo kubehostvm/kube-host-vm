@@ -3,33 +3,35 @@ set -eux
 
 # pod env
 ## if flavor.vcpus < 2: MULTIQUEUE = false
+## LSP_UID is the logical switch port kube-ovn vip uid
 ## shoud set mac as kube-ovn vip type kube_host_vm_vip
 ## iface id is kubeovn vip logical switch port name
 
 # init var
-if [ -z "${POD_UID}" ]; then
-    echo "POD_UID is not set. Exiting."
+if [ -z "${MAC_ADDR}" ]; then
+    echo "MAC_ADDR is not set. Exiting."
     exit 1
 fi
 if [ -z "${LSP}" ]; then
     echo "LSP is not set. Exiting."
     exit 1
 fi
+if [ -z "${LSP_UID}" ]; then
+    echo "LSP_UID is not set. Exiting."
+    exit 1
+fi
+last12=${LSP_UID: -12}
+dev="tap${last12}"
 if [ -z "${CPU}" ]; then
     echo "CPU is not set. Exiting."
     exit 1
 fi
-if [ -z "${MAC_ADDR}" ]; then
-    echo "MAC_ADDR is not set. Exiting."
-    exit 1
-fi
-last12=${POD_UID: -12}
+
 multiqueue=true
 if [ "$CPU" -lt 2 ]; then
     multiqueue=false
 fi
 switch='br-int'
-dev="tap${last12}"
 set +e
 ovsDuplicats=$(ovs-vsctl --no-heading --columns=_uuid,name find Interface external-ids:iface-id="${LSP}" name!="${dev}")
 set -e
@@ -62,7 +64,7 @@ exists=$(ip link show "$dev")
 set -e
 if [ -z "$exists" ]; then
     echo "Creating tap device $dev"
-    if [ "$multiqueue" = true ]; then  
+	if [ "$multiqueue" = true ]; then
         ip tuntap add "${dev}" mode tap multi_queue
     else
         ip tuntap add "${dev}" mode tap
@@ -75,7 +77,7 @@ ovsExists=$(ovs-vsctl list interface | grep -w "$dev")
 set -e
 if [ -z "$ovsExists" ]; then
     echo "Plugging tap device $dev into OVS"
-    ovs-vsctl add-port "${switch}" "${dev}" -- set Interface "${dev}" external_ids:iface-id="${LSP}"
+    ovs-vsctl --timeout=30 add-port "${switch}" "${dev}" -- set Interface "${dev}" external_ids:iface-id="${LSP}"
 else
     echo "Tap device $dev already plugged into OVS"
 fi
