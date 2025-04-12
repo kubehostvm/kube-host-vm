@@ -69,7 +69,8 @@ if [ -z "$exists" ]; then
     else
         ip tuntap add "${dev}" mode tap
     fi
-    ip link set "$dev" address "${MAC_ADDR}" up
+    ip link set "$dev" address "${MAC_ADDR}"
+    ip link set "$dev" up
 fi
 # if not exists, plug it into OVS
 set +e
@@ -78,6 +79,7 @@ set -e
 if [ -z "$ovsExists" ]; then
     echo "Plugging tap device $dev into OVS"
     ovs-vsctl --timeout=30 add-port "${switch}" "${dev}" -- set Interface "${dev}" external_ids:iface-id="${LSP}"
+    ip link set "$dev" up
 else
     echo "Tap device $dev already plugged into OVS"
 fi

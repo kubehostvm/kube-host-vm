@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: vm1
-  labels:
-    kube-host-vm/name: vm1
+  name: vm1-debug
 spec:
   hostNetwork: true
   containers:
@@ -17,9 +15,8 @@ spec:
           cpu: "2"
           memory: "2048Mi"
       command:
-      - sh
-      - -ecx
-      - /etc/kube-host-vm/boot-vm.sh
+      - sleep
+      - infinity
       env:
       - name: CPU
         value: "2"

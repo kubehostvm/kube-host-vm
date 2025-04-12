@@ -12,7 +12,7 @@ if [ -z "${CPU}" ]; then
 fi
 
 switch='br-int'
-ovs-vsctl --timeout=30 --if-exist del-port "${switch} ${dev}"
+ovs-vsctl --timeout=30 --if-exist del-port "${switch}" "${dev}"
 # if exists, delete it
 set +e
 exists=$(ip link show "$dev" 2>/dev/null)
