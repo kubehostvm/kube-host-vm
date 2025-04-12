@@ -1,0 +1,10 @@
+apiVersion: kubeovn.io/v1
+kind: Vip
+metadata:
+  name: vm01
+spec:
+  namespace: default
+  subnet: ovn-default
+  type: "kube_host_vm_vip"
+  macAddress: 02:94:b0:9e:52:29
+  v4ip: 10.16.0.77
