@@ -1,5 +1,5 @@
 # syntax = docker/dockerfile:experimental
-FROM debian:bookworm
+FROM kubeovn/kube-ovn:v1.14.0
 
 ARG DEBIAN_FRONTEND=noninteractive
 # TODO:// simplify
