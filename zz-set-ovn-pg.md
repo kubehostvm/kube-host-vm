@@ -2,6 +2,14 @@
 # set ovn port group to access public net
 
 ```bash
+▶ k ko nbctl lr-policy-list ovn-cluster         
+Routing Policies
+     31000                            ip4.dst == 10.16.0.0/16           allow                           # 直连路由优先级最高
+     31000                           ip4.dst == 100.64.0.0/16           allow
+     30000                           ip4.dst == 192.168.0.106         reroute                100.64.0.2
+     29000                 ip4.src == $ovn.default.debian_ip4         reroute                100.64.0.2 # 这条路由基于 port group，只要把 port id 加入即可
+
+
 ▶ k ko nbctl list Port_Group    ovn.default.debian       
 _uuid               : 32186b78-b24c-4bea-89a7-fd065ab84764
 acls                : []
@@ -30,13 +38,13 @@ dhcpv4_options      : []
 
 
 
-k ko nbctl pg-set-ports ovn.default.debian a511d621-3132-4bb0-906b-12654a38ec68
+k ko nbctl pg-set-ports ovn.default.debian a511d621-3132-4bb0-906b-12654a38ec68 8ace1971-fac8-4552-90c7-16679f50ff0d
 
 ▶  k ko nbctl list Port_Group    ovn.default.debian  
 _uuid               : 32186b78-b24c-4bea-89a7-fd065ab84764
 acls                : []
 external_ids        : {np="ovn-default/debian"}
 name                : ovn.default.debian
-ports               : [a511d621-3132-4bb0-906b-12654a38ec68]
+ports               : [8ace1971-fac8-4552-90c7-16679f50ff0d, a511d621-3132-4bb0-906b-12654a38ec68]
 
 ```
