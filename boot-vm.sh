@@ -81,7 +81,7 @@ if [ "$multiqueue" = true ]; then
     -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
     -nographic \
     -vnc :"${vnc_index}" \
-    -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=/etc/kube-host-vm/untap-into-ovs.sh,vhost=on,queues="${CPU}" \
+    -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on,queues="${CPU}" \
     -device virtio-net-pci,mq=on,vectors="${vectors}",netdev=hn0,id=n0,mac="${MAC_ADDR}" \
     -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
 else
@@ -94,7 +94,7 @@ else
     -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
     -nographic \
     -vnc :"${vnc_index}" \
-    -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=/etc/kube-host-vm/untap-into-ovs.sh,vhost=on \
+    -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on \
     -device virtio-net-pci,netdev=hn0,id=n0,mac="${MAC_ADDR}" \
     -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
 fi
