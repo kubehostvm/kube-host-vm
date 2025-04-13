@@ -5,7 +5,7 @@ metadata:
   labels:
     kube-host-vm/name: vm1
 spec:
-  terminationGracePeriodSeconds: 300
+  terminationGracePeriodSeconds: 5
   hostNetwork: true
   containers:
     - name: qemu
