@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vm1
+  labels:
+    kube-host-vm/name: vm1
+spec:
+  terminationGracePeriodSeconds: 5
+  hostNetwork: true
+  containers:
+    - name: qemu
+      image: icoy/kube-host-vm:v0.0.3
+      securityContext:
+        allowPrivilegeEscalation: true
+        privileged: true
+      resources:
+        limits:
+          cpu: "2"
+          memory: "2048Mi"
+      command:
+      - sh
+      - -ecx
+      - /etc/kube-host-vm/libvirtd-listen.sh
+      env:
+      - name: CPU
+        value: "2"
+      - name: LSP
+        value: "vm01.default"
+      - name: LSP_UID
+        value: "e8ea1de8-1180-4cd0-92ef-d032ee5512d6"
+      - name: IP
+        value: "10.16.0.77"
+      - name: MAC_ADDR
+        value: "02:94:b0:9e:52:29"
+      - name: POD_UID
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.uid
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.namespace
+      volumeMounts:
+        - name: cache
+          mountPath: /etc/kube-host-vm
+        - name: host-run-ovs
+          mountPath: /run/openvswitch
+  volumes:
+    - name: cache
+      hostPath:
+        path: /etc/kube-host-vm
+        type: Directory
+    - hostPath:
+        path: /run/openvswitch
+        type: ""
+      name: host-run-ovs
