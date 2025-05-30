@@ -2,6 +2,11 @@
 FROM kubeovn/kube-ovn:v1.14.0
 
 ARG DEBIAN_FRONTEND=noninteractive
+# use tsinghua mirror
+RUN rm -fr /etc/apt/sources.list.d /etc/apt/*.list
+COPY sources.list /etc/apt/sources.list
+# test if sources.list is working
+RUN apt-get update
 # TODO:// simplify
 RUN apt-get update && \
     apt-get upgrade -y && \
