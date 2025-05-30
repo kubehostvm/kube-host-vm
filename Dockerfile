@@ -23,12 +23,14 @@ RUN apt-get update && \
     openssl \
     easy-rsa \
     dnsutils \
-    qemu-kvm \ 
-    qemu-utils \ 
-    qemu-system \ 
-    ifenslave \ 
-    bridge-utils \ 
+    qemu-kvm \
+    qemu-utils \
+    qemu-system \
+    ifenslave \
+    bridge-utils \
     cloud-image-utils \
+    libvirt-clients \
+    libvirt-daemon-system \
     net-tools && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /etc/localtime
