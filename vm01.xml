@@ -7,7 +7,7 @@
     <partition>/machine</partition>
   </resource>
   <os>
-    <type arch='x86_64' machine='pc-i440fx-xenial'>hvm</type>
+    <type arch='x86_64' machine='pc'>hvm</type>
   </os>
   <features>
     <acpi/>
@@ -59,12 +59,7 @@
     <interface type='bridge'>
       <mac address='02:94:b0:9e:52:29'/>
       <source network='ovs' bridge='br-int'/>
-      <virtualport type='openvswitch'>
-        <parameters interfaceid='vm01.default'/>
-      </virtualport>
-      <target dev='tapxxx'/>
-      <model type='virtio'/>
-      <alias name='net0'/>
+      <virtualport type='openvswitch'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
     </interface>
     <serial type='pty'>
