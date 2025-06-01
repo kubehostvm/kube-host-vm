@@ -34,7 +34,7 @@ spec:
         value: "02:94:b0:9e:52:29"
       - name: POD_UID
         valueFrom:
-          fieldRef: 
+          fieldRef:
             fieldPath: metadata.uid
       - name: POD_NAME
         valueFrom:
