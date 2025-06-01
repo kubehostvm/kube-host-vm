@@ -46,12 +46,18 @@ spec:
           mountPath: /etc/kube-host-vm
         - name: host-run-ovs
           mountPath: /run/openvswitch
+        - name: libvirt2host
+          mountPath: /run/libvirt2host
   volumes:
     - name: cache
       hostPath:
         path: /etc/kube-host-vm
         type: Directory
-    - hostPath:
+    - name: host-run-ovs
+      hostPath:
         path: /run/openvswitch
         type: ""
-      name: host-run-ovs
+    - name: libvirt2host
+      hostPath:
+        path: /run/libvirt2host
+        type: DirectoryOrCreate

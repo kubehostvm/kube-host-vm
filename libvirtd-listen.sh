@@ -72,6 +72,7 @@ using_vnc_port=$((5900 + vnc_index))
 echo "vm ${name} using vnc port ${using_vnc_port}"
 
 # set libvirt config
+rm -fr /run/libvirt2host && mkdir -p /run/libvirt2host
 cp /etc/kube-host-vm/libvirtd.conf /etc/libvirt/libvirtd.conf
 cp /etc/kube-host-vm/qemu.conf /etc/libvirt/qemu.conf
 # start libvirtd listen

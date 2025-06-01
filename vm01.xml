@@ -1,7 +1,7 @@
 <domain type='kvm' id='12'>
   <name>vm01</name>
-  <memory unit='KiB'>5188888</memory>
-  <currentMemory unit='KiB'>5188888</currentMemory>
+  <memory unit='KiB'>4096000</memory>
+  <currentMemory unit='KiB'>4096000</currentMemory>
   <vcpu placement='static'>2</vcpu>
   <resource>
     <partition>/machine</partition>
