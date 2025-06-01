@@ -8,7 +8,7 @@ k8s cluster host the virtual machine
 
 ### 1.1 qemu run vm
 
-参考 kube-host-vm.yaml
+参考 kube-qemu-vm.yaml
 
 ### 1.2 libvirt run vm
 
@@ -37,3 +37,32 @@ switch 71ef42c1-8206-42ac-8181-ebc76b589777 (ovn-default)
 ```
 
 然后使用 LSP 的名字和 MAC地址构造虚拟机网卡部分的 XML：参考 libvirt-ovs-nic.xml
+
+
+## 3. debug
+
+### 3.1 关闭 host libvirtd
+
+```bash
+
+systemctl disable libvirtd
+systemctl stop libvirtd
+
+# 禁用 libvirt 的 socket 拉起 libvirtd 服务
+systemctl disable libvirtd.socket
+systemctl disable libvirtd-ro.socket
+systemctl disable libvirtd-admin.socket
+
+systemctl stop libvirtd.socket
+systemctl stop libvirtd-ro.socket
+systemctl stop libvirtd-admin.socket
+
+# 确认无进程
+ps -aux | grep libvirt
+
+systemctl cat libvirtd
+systemctl cat libvirtd.socket
+systemctl cat libvirtd-ro.socket
+systemctl cat libvirtd-admin.socket
+
+```

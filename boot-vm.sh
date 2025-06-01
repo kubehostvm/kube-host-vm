@@ -3,7 +3,8 @@ set -eux
 # pod env
 # init var
 
-BASE_IMG="/etc/kube-host-vm/img/noble-server-cloudimg-amd64.img"
+# BASE_IMG="/etc/kube-host-vm/img/noble-server-cloudimg-amd64.img"
+BASE_IMG="/etc/kube-host-vm/img/qemu-cirros.qcow2"
 BASE_IMG_CLOUD_CFG="/etc/kube-host-vm/img/cloud-cfg.raw"
 
 if [ -z "${POD_NAME}" ]; then
@@ -76,28 +77,28 @@ vectors=$((CPU * 2 + 2)) # N for tx queues, N for rx queues, 1 for config, and o
 
 if [ "$multiqueue" = true ]; then
     qemu-system-x86_64 \
-    -name "${name}" \
-    -m 2G \
-    -smp "${smp},cores=${CPU}" \
-    -boot menu=on \
-    -drive file="${qcow2_file}",format=qcow2,if=virtio,cache=unsafe \
-    -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
-    -nographic \
-    -vnc :"${vnc_index}" \
-    -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on,queues="${CPU}" \
-    -device virtio-net-pci,mq=on,vectors="${vectors}",netdev=hn0,id=n0,mac="${MAC_ADDR}" \
-    -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
+        -name "${name}" \
+        -m 2G \
+        -smp "${smp},cores=${CPU}" \
+        -boot menu=on \
+        -drive file="${qcow2_file}",format=qcow2,if=virtio,cache=unsafe \
+        -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
+        -nographic \
+        -vnc :"${vnc_index}" \
+        -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on,queues="${CPU}" \
+        -device virtio-net-pci,mq=on,vectors="${vectors}",netdev=hn0,id=n0,mac="${MAC_ADDR}" \
+        -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
 else
     qemu-system-x86_64 \
-    -name "${name}" \
-    -m 2G \
-    -smp "${smp},cores=${CPU}" \
-    -boot menu=on \
-    -drive file="${qcow2_file}",format=qcow2,if=virtio,cache=unsafe \
-    -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
-    -nographic \
-    -vnc :"${vnc_index}" \
-    -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on \
-    -device virtio-net-pci,netdev=hn0,id=n0,mac="${MAC_ADDR}" \
-    -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
+        -name "${name}" \
+        -m 2G \
+        -smp "${smp},cores=${CPU}" \
+        -boot menu=on \
+        -drive file="${qcow2_file}",format=qcow2,if=virtio,cache=unsafe \
+        -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
+        -nographic \
+        -vnc :"${vnc_index}" \
+        -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on \
+        -device virtio-net-pci,netdev=hn0,id=n0,mac="${MAC_ADDR}" \
+        -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
 fi

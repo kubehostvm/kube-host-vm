@@ -9,7 +9,7 @@ spec:
   hostNetwork: true
   containers:
     - name: qemu
-      image: icoy/kube-host-vm:v0.0.2
+      image: icoy/kube-host-vm:v0.0.3
       securityContext:
         allowPrivilegeEscalation: true
         privileged: true
@@ -27,7 +27,7 @@ spec:
       - name: LSP
         value: "vm01.default"
       - name: LSP_UID
-        value: "e8ea1de8-1180-4cd0-92ef-d032ee5512d6"
+        value: "d7ae5bc7-95a1-4095-b4b1-bc11ed719892"
       - name: IP
         value: "10.16.0.77"
       - name: MAC_ADDR
