@@ -1,8 +1,8 @@
 <interface type='bridge'>
-  <mac address='52:54:00:93:05:25'/>
+  <mac address='02:94:b0:9e:52:29'/>
   <source network='ovs' bridge='br-int'/>
   <virtualport type='openvswitch'>
-    <parameters interfaceid='668033d2-06a4-4aaa-aca5-30cde245e477'/>
+    <parameters interfaceid='vm01.default'/>
   </virtualport>
   <target dev='vnet0'/>
   <model type='virtio'/>
