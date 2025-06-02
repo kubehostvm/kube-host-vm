@@ -3,8 +3,7 @@ set -eux
 # pod env
 # init var
 
-# BASE_IMG="/etc/kube-host-vm/img/noble-server-cloudimg-amd64.img"
-BASE_IMG="/etc/kube-host-vm/img/qemu-cirros.qcow2"
+BASE_IMG="/etc/kube-host-vm/img/noble-server-cloudimg-amd64.img"
 BASE_IMG_CLOUD_CFG="/etc/kube-host-vm/img/cloud-cfg.raw"
 
 if [ -z "${POD_NAME}" ]; then
@@ -72,33 +71,9 @@ set -e
 using_vnc_port=$((5900 + vnc_index))
 echo "vm ${name} using vnc port ${using_vnc_port}"
 
-# refer to https://www.linux-kvm.org/page/Multiqueue
-vectors=$((CPU * 2 + 2)) # N for tx queues, N for rx queues, 1 for config, and one for possible control vq
-
-if [ "$multiqueue" = true ]; then
-    qemu-system-x86_64 \
-        -name "${name}" \
-        -m 2G \
-        -smp "${smp},cores=${CPU}" \
-        -boot menu=on \
-        -drive file="${qcow2_file}",format=qcow2,if=virtio,cache=unsafe \
-        -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
-        -nographic \
-        -vnc :"${vnc_index}" \
-        -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on,queues="${CPU}" \
-        -device virtio-net-pci,mq=on,vectors="${vectors}",netdev=hn0,id=n0,mac="${MAC_ADDR}" \
-        -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
-else
-    qemu-system-x86_64 \
-        -name "${name}" \
-        -m 2G \
-        -smp "${smp},cores=${CPU}" \
-        -boot menu=on \
-        -drive file="${qcow2_file}",format=qcow2,if=virtio,cache=unsafe \
-        -drive file="${cloud_cfg_file}",format=raw,if=virtio,media=cdrom \
-        -nographic \
-        -vnc :"${vnc_index}" \
-        -netdev tap,id=hn0,ifname="${dev}",script=/etc/kube-host-vm/tap-into-ovs.sh,downscript=no,vhost=on \
-        -device virtio-net-pci,netdev=hn0,id=n0,mac="${MAC_ADDR}" \
-        -device virtio-rng-pci -enable-kvm -cpu host,+x2apic
-fi
+# set libvirt config
+rm -fr /run/libvirt2host && mkdir -p /run/libvirt2host
+cp /etc/kube-host-vm/libvirtd.conf /etc/libvirt/libvirtd.conf
+cp /etc/kube-host-vm/qemu.conf /etc/libvirt/qemu.conf
+# start libvirtd listen
+/usr/sbin/libvirtd --listen --verbose
