@@ -66,3 +66,13 @@ systemctl cat libvirtd-ro.socket
 systemctl cat libvirtd-admin.socket
 
 ```
+
+## 4. virsh connect socket
+
+```bash
+
+export LIBVIRT_DEFAULT_URI=qemu+unix:///system?socket=/run/libvirt2host/libvirt-sock
+
+virsh list
+
+```
