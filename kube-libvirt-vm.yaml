@@ -15,32 +15,34 @@ spec:
         allowPrivilegeEscalation: true
         privileged: true
       command:
-      - sh
-      - -ecx
-      - /etc/kube-host-vm/libvirtd-listen.sh
+        - sh
+        - -ecx
+        - /etc/kube-host-vm/libvirtd-listen.sh
       env:
-      - name: CPU
-        value: "2"
-      - name: LSP
-        value: "vm01.default"
-      - name: LSP_UID
-        value: "e8ea1de8-1180-4cd0-92ef-d032ee5512d6"
-      - name: IP
-        value: "10.16.0.77"
-      - name: MAC_ADDR
-        value: "02:94:b0:9e:52:29"
-      - name: POD_UID
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.uid
-      - name: POD_NAME
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.name
-      - name: POD_NAMESPACE
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.namespace
+        - name: LIBVIRT_DEFAULT_URI
+          value: "qemu+unix:///system?socket=/run/libvirt2host/libvirt-sock"
+        - name: CPU
+          value: "2"
+        - name: LSP
+          value: "vm01.default"
+        - name: LSP_UID
+          value: "876c41c0-1091-4a72-aefe-b425de00837c"
+        - name: IP
+          value: "10.16.0.77"
+        - name: MAC_ADDR
+          value: "02:94:b0:9e:52:29"
+        - name: POD_UID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
       volumeMounts:
         - name: cache
           mountPath: /etc/kube-host-vm

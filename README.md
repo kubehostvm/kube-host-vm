@@ -45,17 +45,17 @@ switch 71ef42c1-8206-42ac-8181-ebc76b589777 (ovn-default)
 
 ```bash
 
-systemctl disable libvirtd
-systemctl stop libvirtd
+sudo systemctl disable libvirtd
+sudo systemctl stop libvirtd
 
 # 禁用 libvirt 的 socket 拉起 libvirtd 服务
-systemctl disable libvirtd.socket
-systemctl disable libvirtd-ro.socket
-systemctl disable libvirtd-admin.socket
+sudo systemctl disable libvirtd.socket
+sudo systemctl disable libvirtd-ro.socket
+sudo systemctl disable libvirtd-admin.socket
 
-systemctl stop libvirtd.socket
-systemctl stop libvirtd-ro.socket
-systemctl stop libvirtd-admin.socket
+sudo systemctl stop libvirtd.socket
+sudo systemctl stop libvirtd-ro.socket
+sudo systemctl stop libvirtd-admin.socket
 
 # 确认无进程
 ps -aux | grep libvirt
