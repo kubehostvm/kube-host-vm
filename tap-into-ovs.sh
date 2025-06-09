@@ -81,5 +81,6 @@ if [ -z "$ovsExists" ]; then
     ovs-vsctl --timeout=30 add-port "${switch}" "${dev}" -- set Interface "${dev}" external_ids:iface-id="${LSP}"
     ip link set "$dev" up
 else
+    ovs-vsctl set Interface "${dev}" external_ids:iface-id="${LSP}"
     echo "Tap device $dev already plugged into OVS"
 fi
