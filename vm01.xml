@@ -56,6 +56,9 @@
       <mac address='02:94:b0:9e:52:29'/>
       <source network='ovs' bridge='br-int'/>
       <virtualport type='openvswitch'/>
+      <target dev='tapd9106ab08dae'/>
+      <model type='virtio'/>
+      <alias name='net0'/>
       <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
     </interface>
     <serial type='pty'>
