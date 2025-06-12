@@ -1,0 +1,64 @@
+# syntax = docker/dockerfile:experimental
+FROM kubeovn/kube-ovn:v1.14.0
+
+ARG DEBIAN_FRONTEND=noninteractive
+# use tsinghua mirror
+RUN rm -fr /etc/apt/sources.list.d /etc/apt/*.list
+COPY sources.list /etc/apt/sources.list
+COPY libvirt /libvirt
+
+# TODO:// simplify
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    git \
+    meson \
+    ninja-build \
+    pkg-config \
+    libgnutls28-dev \
+    libxml2-utils \
+    libglib2.0-dev \
+    xsltproc \
+    libjson-c-dev \
+    libxml2-dev \
+    python3-docutils \
+    libtirpc-dev \
+    dnsmasq \
+    dmidecode \
+    qemu-kvm \
+    qemu-utils \
+    j2cli \
+    hostname \
+    vim \
+    tree \
+    iproute2 \
+    inetutils-ping \
+    traceroute \
+    arping \
+    lsof \
+    ncat \
+    iptables \
+    tcpdump \
+    ipset \
+    curl \
+    openssl \
+    easy-rsa \
+    dnsutils \
+    ifenslave \
+    bridge-utils \
+    cloud-image-utils \
+    net-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /etc/localtime
+
+RUN git config --global http.proxy http://127.0.0.1:1080 && git config --global https.proxy http://127.0.0.1:1080
+RUN cd /libvirt && meson build -Dsystem=true -Ddriver_qemu=enabled -Ddriver_libvirtd=enabled -Ddriver_remote=enabled
+RUN cd /libvirt && ninja -C build
+RUN cd /libvirt && ninja -C build install
+RUN ldconfig
+RUN groupadd --system libvirt-qemu
+RUN useradd --system -g libvirt-qemu -G kvm -d /var/lib/libvirt -s /sbin/nologin libvirt-qemu
+
+WORKDIR /etc/kube-host-vm/
