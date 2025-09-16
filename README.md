@@ -1,4 +1,15 @@
+# 优美的中国话
+
+- 好产品自己会说话
+- 真实性比广告更重要
+- 先出发后优化
+- 方向比干更重要
+
+## 项目定位
+本项目主要用于 qemu-kvm 和 rust-vmm 虚拟化结合 k8s 控制面等场景的原型验证：涉及 dpdk spdk 等
+
 # kube-host-vm
+
 k8s cluster host the virtual machine
 
 ![kubehostvm](khm.png)
